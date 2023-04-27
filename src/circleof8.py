@@ -12,7 +12,6 @@ from math import sqrt, pow, pi
 
 class Fig8(): 
     def callback_function(self, topic_data: Odometry):
-        print("daffa")
         pose = topic_data.pose.pose
         position = pose.position
         orientation = pose.orientation
