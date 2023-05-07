@@ -25,7 +25,7 @@ class Obstacle():
         print ('Back: {}'.format(msg.ranges[180]))
         
       
-      	#Obstacle Avoidance
+        # Obstacle Avoidance
         self.distance = 0.7
         if msg.ranges[0] > self.distance and msg.ranges[15] > self.distance and msg.ranges[345] > self.distance:
 
