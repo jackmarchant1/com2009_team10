@@ -31,7 +31,7 @@ class Obstacle():
 
         # if theres no obstacle detected :
             obstacle.linear.x = 0.5 
-            obstacle.angular.z = 0.0 # don't rotate, just keep moving forward
+            obstacle.angular.z = 0.1
             rospy.loginfo("Exploring")
 
         # incoming obstacle :
