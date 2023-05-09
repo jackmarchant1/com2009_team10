@@ -37,7 +37,7 @@ class Obstacle():
         # incoming obstacle :
         else: 
             rospy.loginfo("An Obstacle Near Detected")
-            # stop
+            # move backwards
             obstacle.linear.x = -1.5
             # rotate counter-clockwise
             obstacle.angular.z = 1.5
