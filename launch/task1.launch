@@ -1,0 +1,3 @@
+<launch>
+<node pkg = 'com2009_team10' type = 'circleof8.py' name = 'circleof8' output = 'screen'> </node>
+</launch>
