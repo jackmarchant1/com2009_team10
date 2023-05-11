@@ -7,7 +7,7 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError 
 
 from sensor_msgs.msg import Image 
-
+import numpy as np
 # Initialisations: 
 node_name = "object_detection_node"
 rospy.init_node(node_name)
@@ -42,25 +42,31 @@ def camera_cb(img_data):
         print(e)
 
     if waiting_for_image == True: 
-        height, width, channels = cv_img.shape
+        hsv_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2HSV)
+        colors = {
+            'red': [(0, 100, 100), (10, 255, 255)],
+            'blue': [(100, 150, 0), (140, 255, 255)],
+            'green': [(35, 100, 50), (85, 255, 255)],
+            'turquoise': [(60,210,200), (70, 230, 220)]
+        }
 
-        print(f"Obtained an image of height {height}px and width {width}px.")
+        dominant_color = None
+        max_count = 0
 
-        crop_width = width - 400
-        crop_height = 400
-        crop_y0 = int((width / 2) - (crop_width / 2))
-        crop_z0 = int((height / 2) - (crop_height / 2))
-        cropped_img = cv_img[crop_z0:crop_z0+crop_height, crop_y0:crop_y0+crop_width]
+        for color, (lower, upper) in colors.items():
+            lower = np.array(lower, dtype=np.uint8)
+            upper = np.array(upper, dtype=np.uint8)
+            mask = cv2.inRange(hsv_img, lower, upper)
+            count = cv2.countNonZero(mask)
 
-        show_and_save_image(cropped_img, img_name = "step2_cropping")
-        hsv_img = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)
-        lower_threshold = (115, 225, 100)
-        upper_threshold = (130, 255, 255)
-        img_mask = cv2.inRange(hsv_img, lower_threshold, upper_threshold)
+            if count > max_count:
+                max_count = count
+                dominant_color = color
 
-        show_and_save_image(img_mask, img_name = "step3_image_mask")
-
-
+        if dominant_color:
+            print(f"The dominant color in the initial zone is {dominant_color}")
+        else:
+            print("No dominant color detected")
 
         waiting_for_image = False
 
